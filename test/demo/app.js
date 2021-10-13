@@ -1,7 +1,7 @@
 const { App } = require('../../index');
 const routes = require('./routes');
 // const middleWares = require('./middleware');
-
+console.log();
 const app = new App({
   routes,
   // middleWares,

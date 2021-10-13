@@ -1,10 +1,12 @@
 ## 简介
 
-模块包暂未发布
+**模块包暂未发布**
 
 基于 koa2 二次封装的企业级框架模板，设计思想参考 egg loader 加载器原理，实现自动加载 router , controller , service 挂载到 ctx 对象上，内部通过 ctx[controller/service]进行调用，对象内部使用同一个上下文，并且根据可以创建 BaseController 和 BaseService 实现继承。
 
-实现内容：
+### 实现内容
+
+#### 已完成功能
 
 - [x] loadUtil
 - [x] loadRouter
@@ -13,7 +15,11 @@
 - [x] loadMiddleware
 - [x] loadSchedule
 
-待实现功能：
+#### 已完成测试
+
+- [x] 服务器启动，请求返回结果验证测试
+
+#### 待实现功能：
 
 - 根据环境变量加载配置文件
 - 丰富默认自带的 util

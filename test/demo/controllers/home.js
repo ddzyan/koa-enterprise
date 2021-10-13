@@ -2,12 +2,18 @@ const { Controller } = require('../../../index');
 
 class HomeController extends Controller {
   async index() {
-    this.ctx.body = 'hello word';
+    this.ctx.body = {
+      code: 0,
+      data: 'hello word',
+    };
   }
 
   async fetchList(ctx, next) {
     const data = await ctx.services.home.getList();
-    ctx.body = data;
+    ctx.body = {
+      code: 0,
+      data,
+    };
   }
 }
 

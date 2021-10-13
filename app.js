@@ -11,7 +11,7 @@ class App extends Koa {
   constructor(options = {}) {
     super();
     const {
-      projectRoot = process.cwd(),
+      projectRoot = path.join(process.cwd(), process.env.baseDir || ''),
       rootControllerPath,
       rootSchedulePath,
       rootServicePath,
