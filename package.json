@@ -35,6 +35,14 @@
     "koa",
     "mvc"
   ],
+  "files": [
+    "core",
+    "loader",
+    "middleware",
+    "util",
+    "app.js",
+    "index.js"
+  ],
   "author": "ddzyan@163.com",
   "license": "ISC",
   "dependencies": {
