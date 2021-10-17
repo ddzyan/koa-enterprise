@@ -28,7 +28,7 @@
 创建项目入口 app.js
 
 ```js
-const { App } = require('@ddz/koa-enterprise');
+const { App } = require('koa-enterprise');
 const routes = require('./routes');
 // const middleWares = require('./middleware');
 

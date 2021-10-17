@@ -1,6 +1,6 @@
 {
   "name": "koa-enterprise",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "koa 企业级框架模板",
   "main": "index.js",
   "scripts": {
