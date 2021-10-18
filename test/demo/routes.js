@@ -8,6 +8,10 @@ const routes = [
     controller: 'home.fetchList',
     method: 'post',
   },
+  {
+    match: '/add',
+    controller: 'home.add',
+  },
 ];
 
 module.exports = routes;

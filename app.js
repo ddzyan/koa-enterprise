@@ -2,10 +2,10 @@ const Koa = require('koa');
 const path = require('path');
 
 const middleware = require('./middleware');
-const utils = require('./util');
 const ControllerLoader = require('./loader/controller');
 const ServiceLoader = require('./loader/service');
 const ScheduleLoader = require('./loader/schedule');
+const UtilLoader = require('./loader/util');
 
 class App extends Koa {
   constructor(options = {}) {
@@ -15,17 +15,20 @@ class App extends Koa {
       rootControllerPath,
       rootSchedulePath,
       rootServicePath,
+      rootUtilPath,
       rootViewPath,
     } = options;
     this.rootSchedulePath = rootSchedulePath || path.join(projectRoot, 'schedules');
     this.rootControllerPath = rootControllerPath || path.join(projectRoot, 'controllers');
     this.rootServicePath = rootServicePath || path.join(projectRoot, 'services');
+    this.rootUtilPath = rootUtilPath || path.join(projectRoot, 'utils');
     this.rootViewPath = rootViewPath || path.join(projectRoot, 'views');
 
     this.options = options;
 
     this.initController();
     this.initService();
+    this.initUtil();
     this.initMiddleware();
     this.initSchedule();
   }
@@ -43,7 +46,13 @@ class App extends Koa {
 
   // 注入工具方法
   injectUtil(context) {
-    utils.forEach(util => util(context));
+    const { utilLoader } = this;
+
+    Object.defineProperty(context, 'utils', {
+      get() {
+        return utilLoader.getUtils();
+      },
+    });
   }
 
   // 注入服务
@@ -60,6 +69,11 @@ class App extends Koa {
   // 初始化控制器
   initController() {
     this.controllerLoader = new ControllerLoader(this.rootControllerPath);
+  }
+
+  // 初始工具加载器
+  initUtil() {
+    this.utilLoader = new UtilLoader(this.rootUtilPath);
   }
 
   // 初始化服务

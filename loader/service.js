@@ -14,7 +14,7 @@ class ServiceLoader extends Loader {
       const fileName = basename.substring(0, basename.indexOf(extname));
 
       if (serviceMap.has(fileName)) {
-        throw new Error(`servies文件夹下有${fileName}文件同名!`);
+        throw new Error(`services文件夹下有${fileName}文件同名!`);
       }
       serviceMap.set(fileName, filepath);
 

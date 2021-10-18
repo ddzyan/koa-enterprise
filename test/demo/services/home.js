@@ -11,8 +11,16 @@ const posts = [
   },
 ];
 
-module.exports = class Home extends Service {
+class HomeService extends Service {
   async getList() {
     return posts;
   }
-};
+
+  add(numA, numB) {
+    const res = this.ctx.utils.number.add(numA, numB);
+
+    return res;
+  }
+}
+
+module.exports = HomeService;

@@ -15,4 +15,15 @@ describe('服务测试', () => {
         done();
       });
   });
+
+  it('/add', (done) => {
+    request(app)
+      .get('/add')
+      .expect(200)
+      .end((err, res) => {
+        if (err) assert.fail(err);
+        assert.strictEqual(res.body.data, 3, '返回结果错误');
+        done();
+      });
+  });
 });
