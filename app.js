@@ -1,5 +1,7 @@
 const Koa = require('koa');
 const path = require('path');
+const assert = require('assert');
+const fs = require('fs');
 
 const middleware = require('./middleware');
 const ControllerLoader = require('./loader/controller');
@@ -11,16 +13,19 @@ class App extends Koa {
   constructor(options = {}) {
     super();
     const {
-      projectRoot = path.join(process.cwd(), process.env.baseDir || ''),
+      projectRoot = __dirname,
       rootControllerPath,
       rootSchedulePath,
       rootServicePath,
       rootUtilPath,
       rootViewPath,
     } = options;
+    assert(fs.existsSync(options.projectRoot), `${options.projectRoot} not exists`);
+
     this.rootSchedulePath = rootSchedulePath || path.join(projectRoot, 'schedules');
     this.rootControllerPath = rootControllerPath || path.join(projectRoot, 'controllers');
     this.rootServicePath = rootServicePath || path.join(projectRoot, 'services');
+    this.rootRoutePath = rootServicePath || path.join(projectRoot, 'routes');
     this.rootUtilPath = rootUtilPath || path.join(projectRoot, 'utils');
     this.rootViewPath = rootViewPath || path.join(projectRoot, 'views');
 
@@ -69,16 +74,19 @@ class App extends Koa {
   // 初始化控制器
   initController() {
     this.controllerLoader = new ControllerLoader(this.rootControllerPath);
+    console.info('[loader] Controller loaded: %s', this.rootControllerPath);
   }
 
   // 初始工具加载器
   initUtil() {
     this.utilLoader = new UtilLoader(this.rootUtilPath);
+    console.info('[loader] Util loaded: %s', this.rootUtilPath);
   }
 
   // 初始化服务
   initService() {
     this.serviceLoader = new ServiceLoader(this.rootServicePath);
+    console.info('[loader] Service loaded: %s', this.rootServicePath);
   }
 
   // 初始化中间件

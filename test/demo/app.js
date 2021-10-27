@@ -3,6 +3,7 @@ const routes = require('./routes');
 // const middleWares = require('./middleware');
 console.log();
 const app = new App({
+  projectRoot: __dirname,
   routes,
   // middleWares,
 });

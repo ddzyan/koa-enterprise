@@ -14,7 +14,6 @@ class UtilLoader extends Loader {
       const basename = path.basename(filepath);
       const extname = path.extname(filepath);
       const fileName = basename.substring(0, basename.indexOf(extname));
-      console.log('fileName ---> ', fileName);
       if (utilMap.has(fileName)) {
         throw new Error(`utils文件夹下有${fileName}文件同名!`);
       }

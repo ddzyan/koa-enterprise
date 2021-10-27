@@ -1,5 +1,13 @@
 ## 简介
 
+[![NPM version][npm-image]][npm-url]
+[![npm download][download-image]][download-url]
+
+[npm-image]: https://img.shields.io/npm/v/koa-enterprise.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/koa-enterprise
+[download-image]: https://img.shields.io/npm/dm/koa-enterprise.svg?style=flat-square
+[download-url]: https://npmjs.org/package/koa-enterprise
+
 基于 koa2 二次封装的企业级框架模板，设计思想参考 egg loader 加载器原理，实现自动加载 router , controller , service 挂载到 ctx 对象上，内部通过 ctx[controller/service]进行调用，对象内部使用同一个上下文，并且根据可以创建 BaseController 和 BaseService 实现继承。
 
 ### 实现内容
