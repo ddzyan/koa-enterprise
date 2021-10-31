@@ -6,9 +6,9 @@ const serviceClass = new Map();
 const services = {};
 
 class ServiceLoader extends Loader {
-  constructor(servicePath) {
+  constructor(dirPath) {
     super();
-    this.loadFiles(servicePath).forEach((filepath) => {
+    this.loadDir(dirPath).forEach((filepath) => {
       const basename = path.basename(filepath);
       const extname = path.extname(filepath);
       const fileName = basename.substring(0, basename.indexOf(extname));
@@ -25,7 +25,7 @@ class ServiceLoader extends Loader {
           if (serviceMap.has(fileName)) {
             if (!serviceClass.has(fileName)) {
               // 只有用到某个service才require这个文件
-              const newClass = require(serviceMap.get(fileName));
+              const newClass = _this.loadFile(serviceMap.get(fileName));
               serviceClass.set(fileName, newClass);
             }
             const S = serviceClass.get(fileName);
@@ -36,7 +36,7 @@ class ServiceLoader extends Loader {
     });
   }
 
-  getServices(context) {
+  getInstance(context) {
     // 更新context
     this.context = context;
     return services;

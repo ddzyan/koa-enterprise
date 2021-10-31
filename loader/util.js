@@ -10,7 +10,7 @@ class UtilLoader extends Loader {
   constructor(utilPath) {
     super();
 
-    this.loadFiles(utilPath).forEach((filepath) => {
+    this.loadDir(utilPath).forEach((filepath) => {
       const basename = path.basename(filepath);
       const extname = path.extname(filepath);
       const fileName = basename.substring(0, basename.indexOf(extname));

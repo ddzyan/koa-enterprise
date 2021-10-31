@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('koa-router'); // 不支持 form_data 数据传输
 const koaCompose = require('koa-compose');
 
 module.exports = (routerConfig, loader) => {
@@ -26,7 +26,7 @@ module.exports = (routerConfig, loader) => {
           if (arr && arr.length) {
             const controllerName = arr[0];
             const controllerMethod = arr[1];
-            const controllerClass = loader.getClass(controllerName);
+            const controllerClass = loader.getInstance(controllerName);
 
             // controller每次请求都要重新new一个，因为每次请求 ctx 都是新的
             const controller = new controllerClass(ctx, next);
