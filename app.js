@@ -1,47 +1,39 @@
 const Koa = require('koa');
-const path = require('path');
-const assert = require('assert');
-const fs = require('fs');
 const Router = require('koa-router');
 
 const middleware = require('./middleware');
-const ControllerLoader = require('./loader/controller');
-const ServiceLoader = require('./loader/service');
-const ScheduleLoader = require('./loader/schedule');
+const ServiceLoader = require('./loader/mixin/service');
+const ScheduleLoader = require('./loader/mixin/schedule');
 const UtilLoader = require('./loader/util');
-const RouterLoader = require('./loader/router');
+const Loader = require('./loader');
 
 const ROUTER = Symbol('Core#router');
 
-class App extends Koa {
+class AppCore extends Koa {
   constructor(options = {}) {
     super();
-    const {
-      projectRoot = __dirname,
-      rootControllerPath,
-      rootSchedulePath,
-      rootServicePath,
-      rootUtilPath,
-      rootViewPath,
-    } = options;
-    this.logger = options.logger || console;
-    assert(fs.existsSync(options.projectRoot), `${options.projectRoot} not exists`);
+    options.baseDir = options.baseDir || process.cwd(); // 默认 app 路径
 
-    this.rootSchedulePath = rootSchedulePath || path.join(projectRoot, 'schedules');
-    this.rootControllerPath = rootControllerPath || path.join(projectRoot, 'controllers');
-    this.rootServicePath = rootServicePath || path.join(projectRoot, 'services');
-    this.rootRoutePath = rootServicePath || path.join(projectRoot, 'routes');
-    this.rootUtilPath = rootUtilPath || path.join(projectRoot, 'utils');
-    this.rootViewPath = rootViewPath || path.join(projectRoot, 'views');
-
+    this.console = options.logger || console;
     this.options = options;
 
-    this.initController();
-    this.initService();
-    this.loadRouter();
-    this.initUtil();
-    this.initMiddleware();
-    this.initSchedule();
+    this.beforeStartArr = [];
+
+    const loader = new Loader({
+      baseDir: options.baseDir,
+      app: this,
+      logger: this.console,
+    });
+
+    // 先架子啊controller
+    loader.loadController();
+    loader.loadRouter();
+
+    this.beforeStart();
+    // this.initService();
+    // this.initUtil();
+    // this.initMiddleware();
+    // this.initSchedule();
   }
 
   // 创建上下文
@@ -77,27 +69,6 @@ class App extends Koa {
     });
   }
 
-  // 初始化控制器
-  initController() {
-    this.controllerLoader = new ControllerLoader({ dirPath: this.rootControllerPath, app: this });
-    this.logger.info('[loader] Controller loaded: %s', this.rootControllerPath);
-  }
-
-  // 初始化router
-  loadRouter() {
-    new RouterLoader({ dirPath: this.rootRoutePath, app: this });
-    this.logger.info('[loader] Router loaded: %s', this.rootRoutePath);
-  }
-
-  get router() {
-    if (this[ROUTER]) {
-      return this[ROUTER];
-    }
-    const router = (this[ROUTER] = new Router());
-
-    return router;
-  }
-
   // 初始工具加载器
   initUtil() {
     this.utilLoader = new UtilLoader(this.rootUtilPath);
@@ -112,7 +83,7 @@ class App extends Koa {
 
   // 初始化中间件
   initMiddleware() {
-    const { middleWares = [], routes = [], config = {} } = this.options;
+    const { middleWares = [], config = {} } = this.options;
 
     // 初始化中间件
     this.use(middleware.init());
@@ -135,15 +106,35 @@ class App extends Koa {
         throw new Error('中间件必须是函数');
       }
     });
-
-    // controller要最后注册
-    this.use(middleware.route(routes, this.controllerLoader));
   }
 
   // 初始化定时任务
   initSchedule() {
     this.schedule = new ScheduleLoader(this.rootSchedulePath);
   }
+
+  get router() {
+    if (this[ROUTER]) {
+      return this[ROUTER];
+    }
+
+    this[ROUTER] = new Router();
+
+    const router = this[ROUTER];
+
+    this.beforeStartArr.push((_this) => {
+      _this.use(router.routes());
+      _this.use(router.allowedMethods());
+    });
+
+    return router;
+  }
+
+  beforeStart() {
+    for (const item of this.beforeStartArr) {
+      item(this);
+    }
+  }
 }
 
-module.exports = App;
+module.exports = AppCore;

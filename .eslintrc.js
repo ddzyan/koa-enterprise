@@ -17,8 +17,10 @@ module.exports = {
   ],
   plugins: ['promise' /*, 'prettier'*/],
   rules: {
-    'no-console': 'error',
-    'prefer-arrow-callback': 'error',
+    'no-console': 2,
+    'prefer-arrow-callback': 2,
+    'no-param-reassign': 0,
+    'class-methods-use-this': 0,
     // 'semi': ['error', 'never'],
     // 'prettier/prettier': [
     //   'error', {
@@ -27,4 +29,4 @@ module.exports = {
     //   trailingComma: true // be same with airbnb comma-dangle rule
     // }]
   },
-}
+};

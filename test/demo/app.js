@@ -1,9 +1,8 @@
 const { App } = require('../../index');
-const routes = require('./routes');
+const routes = require('./router');
 // const middleWares = require('./middleware');
 
 const app = new App({
-  projectRoot: __dirname,
   routes,
   // middleWares,
 });

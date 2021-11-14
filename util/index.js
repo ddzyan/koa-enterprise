@@ -1,5 +1,7 @@
 const path = require('path');
 const BuiltinModule = require('module');
+const is = require('is-type-of');
+const co = require('co');
 
 // Guard against poorly mocked module constructors.
 const Module = module.constructor.length > 1
@@ -24,5 +26,12 @@ module.exports = {
       err.message = `load file: ${filepath}, error: ${err.message}`;
       throw err;
     }
+  },
+
+  async callFn(fn, args, ctx) {
+    args = args || [];
+    if (!is.function(fn)) return;
+    if (is.generatorFunction(fn)) fn = co.wrap(fn);
+    return ctx ? fn.call(ctx, ...args) : fn(...args);
   },
 };

@@ -46,9 +46,11 @@
   "author": "ddzyan@163.com",
   "license": "ISC",
   "dependencies": {
+    "glob": "^7.2.0",
     "is-type-of": "^1.2.1",
     "koa": "^2.13.3",
     "koa-bodyparser": "^4.3.0",
+    "koa-compose": "^4.1.0",
     "koa-router": "^10.1.1",
     "koa-views": "^7.0.1",
     "lodash": "^4.17.21",

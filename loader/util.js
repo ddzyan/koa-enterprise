@@ -1,6 +1,6 @@
 const path = require('path');
 
-const Loader = require('./loader');
+const Loader = require('.');
 
 const utilMap = new Map();
 const utilClass = new Map();
